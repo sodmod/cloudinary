@@ -18,7 +18,18 @@ public class CloudinaryController {
     
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<?> uploadToCloudinary(@ModelAttribute MultipartFile multipartFile){
-        fileParserService.parse(multipartFile, multipartFile.getContentType());
+        String fileExtension = getFileExtension(multipartFile);
+        fileParserService.parse(multipartFile, fileExtension);
         return ResponseEntity.ok("upload successful");
     }
+
+
+    public static String getFileExtension(MultipartFile file) {
+        String originalFilename = file.getOriginalFilename();
+        if (originalFilename != null && originalFilename.contains(".")) {
+            return originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
+        }
+        return "";
+    }
+    
 }
